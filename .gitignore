@@ -1,0 +1,12 @@
+# Local environment files and their saved copies.
+.env
+.env.*
+!.env.example
+
+# Existing Terraform provider caches and local host configuration.
+**/.terraform/
+/terraform-mirror/
+/terraform-host.tfrc
+
+# Local configuration backups.
+*.bak

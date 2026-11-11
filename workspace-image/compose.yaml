@@ -1,0 +1,7 @@
+services:
+  workspace-image:
+    image: intball2-workspace:noetic-v1
+    build:
+      context: ..
+      dockerfile: workspace-image/Dockerfile
+    profiles: [build]

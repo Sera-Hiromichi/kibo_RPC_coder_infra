@@ -1,0 +1,4 @@
+**
+!workspace-image/
+!workspace-image/Dockerfile
+!workspace-image/fetch-official-sources.sh
