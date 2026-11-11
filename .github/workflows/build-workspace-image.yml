@@ -47,3 +47,4 @@ jobs:
               rospack find platform_msgs
               rospack find sample_tests
               python3 -c "import rospy, actionlib, numpy, rospkg; import ib2_msgs.msg, platform_msgs.msg, platform_msgs.srv"
+           '
