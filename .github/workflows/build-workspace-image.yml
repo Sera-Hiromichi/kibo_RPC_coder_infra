@@ -1,0 +1,49 @@
+name: Validate workspace image
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check shell syntax
+        run: |
+          bash -n backup-workspace.sh
+          bash -n workspace-image/fetch-official-sources.sh
+
+      - name: Validate Compose configuration
+        run: |
+          docker compose \
+            -f workspace-image/compose.yaml \
+            --profile build config --quiet
+
+      - name: Build workspace image
+        run: |
+          docker compose \
+            -f workspace-image/compose.yaml \
+            --profile build build
+
+      - name: Verify ROS environment as workspace user
+        run: |
+          docker run --rm \
+            --network none \
+            --entrypoint bash \
+            intball2-workspace:noetic-v1 \
+            -c '
+              set -eo pipefail
+              test "$(id -un)" = coder
+              source /opt/intball2_ws/devel/setup.bash
+              rospack find ib2_msgs
+              rospack find platform_msgs
+              rospack find sample_tests
+              python3 -c "import rospy, actionlib, numpy, rospkg; import ib2_msgs.msg, platform_msgs.msg, platform_msgs.srv"
